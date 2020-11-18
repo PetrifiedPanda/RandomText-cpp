@@ -5,9 +5,8 @@
 
 void generateTextToFile(const std::string& filename, int numSentences, int minWordsPerSentence = 3, int maxWordsPerSentence = 10);
 
-int main(int argc, char** argv) {
-    if (argc != 0)
-        generateTextToFile(argv[0], 100000);
+int main() {
+    generateTextToFile("Gibberish.txt", 100000);
 }
 
 void generateTextToFile(const std::string& filename, int numSentences, int minWordsPerSentence, int maxWordsPerSentence) {
