@@ -14,14 +14,14 @@ constexpr char letters[lettersSize] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', '
 std::default_random_engine engine(time(nullptr));
 
 bool isConsonant(char c) {
-    for (const char& cons : consonants)
+    for (char cons : consonants)
         if (c == cons)
             return true;
     return false;
 }
 
 bool isVowel(char c) {
-    for (const char& vowel : vowels)
+    for (char vowel : vowels)
         if (c == vowel)
             return true;
     return false;
@@ -55,10 +55,10 @@ std::string randomText::getRandomWord(size_t length) {
 }
 
 std::string randomText::generateSentence(int minWords, int maxWords) {
-    std::uniform_int_distribution<int> dist(minWords, maxWords);
+    std::uniform_int_distribution<int> numWordsDist(minWords, maxWords);
     std::uniform_int_distribution<size_t> sizeDist(3, 10);
     std::uniform_int_distribution<int> percentDist(1, 100);
-    size_t numWords = dist(engine);
+    size_t numWords = numWordsDist(engine);
 
     std::string result("");
     for (int i = 0; i < numWords; ++i) {
