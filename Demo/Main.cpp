@@ -1,7 +1,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "RandomText.h"
+#include <RandomText.h>
 
 void generateTextToFile(const std::string& filename, int numSentences, int minWordsPerSentence = 3, int maxWordsPerSentence = 10);
 

@@ -5,8 +5,10 @@ set(This RandomText)
 project(${This})
 
 set(Sources
-    Main.cpp
     RandomText.cpp
 )
 
-add_executable(${This} ${Sources})
+add_library(${This} ${Sources})
+target_include_directories(${This} PUBLIC ./)
+
+add_subdirectory(Demo)
