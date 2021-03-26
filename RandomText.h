@@ -5,7 +5,7 @@ namespace randomText {
 
     std::string getRandomWord(size_t length);
 
-    std::string generateSentence(int minWords, int maxWords);
+    std::string generateSentence(size_t minWords, size_t maxWords);
 
-    std::string generateText(int numSentences, int minWordsPerSentence = 3, int maxWordsPerSentence = 10);
+    std::string generateText(size_t numSentences, size_t minWordsPerSentence = 3, size_t maxWordsPerSentence = 10);
 };

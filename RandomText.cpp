@@ -54,7 +54,7 @@ std::string randomText::getRandomWord(size_t length) {
     return result;
 }
 
-std::string randomText::generateSentence(int minWords, int maxWords) {
+std::string randomText::generateSentence(size_t minWords, size_t maxWords) {
     std::uniform_int_distribution<size_t> numWordsDist(minWords, maxWords);
     std::uniform_int_distribution<size_t> sizeDist(3, 10);
     std::uniform_int_distribution<int> percentDist(1, 100);
@@ -76,7 +76,7 @@ std::string randomText::generateSentence(int minWords, int maxWords) {
     return result;
 }
 
-std::string randomText::generateText(int numSentences, int minWordsPerSentence, int maxWordsPerSentence) {
+std::string randomText::generateText(size_t numSentences, size_t minWordsPerSentence, size_t maxWordsPerSentence) {
     std::uniform_int_distribution<int> percentDist(1, 100);
 
     std::string text("");
