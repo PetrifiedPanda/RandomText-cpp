@@ -61,7 +61,7 @@ std::string randomText::generateSentence(int minWords, int maxWords) {
     size_t numWords = numWordsDist(engine);
 
     std::string result("");
-    for (int i = 0; i < numWords; ++i) {
+    for (size_t i = 0; i < numWords; ++i) {
         result += getRandomWord(sizeDist(engine));
 
         if (i != numWords - 1)
@@ -81,7 +81,7 @@ std::string randomText::generateText(int numSentences, int minWordsPerSentence, 
 
     std::string text("");
 
-    for (int i = 0; i < numSentences; ++i) {
+    for (size_t i = 0; i < numSentences; ++i) {
         text += generateSentence(minWordsPerSentence, maxWordsPerSentence);
 
         if (percentDist(engine) > 30)
