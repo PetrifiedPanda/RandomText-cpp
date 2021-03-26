@@ -55,7 +55,7 @@ std::string randomText::getRandomWord(size_t length) {
 }
 
 std::string randomText::generateSentence(int minWords, int maxWords) {
-    std::uniform_int_distribution<int> numWordsDist(minWords, maxWords);
+    std::uniform_int_distribution<size_t> numWordsDist(minWords, maxWords);
     std::uniform_int_distribution<size_t> sizeDist(3, 10);
     std::uniform_int_distribution<int> percentDist(1, 100);
     size_t numWords = numWordsDist(engine);
