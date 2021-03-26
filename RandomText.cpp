@@ -2,26 +2,26 @@
 
 #include <random>
 
-constexpr size_t vowelsSize = 5;
-constexpr size_t consonantsSize = 21;
-constexpr size_t lettersSize = 26;
+constexpr size_t c_vowelsSize = 5;
+constexpr size_t c_consonantsSize = 21;
+constexpr size_t c_lettersSize = 26;
 
-constexpr char vowels[vowelsSize] = {'a', 'e', 'i', 'o', 'u'};
-constexpr char consonants[consonantsSize] = {'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'};
+constexpr char c_vowels[c_vowelsSize] = {'a', 'e', 'i', 'o', 'u'};
+constexpr char c_consonants[c_consonantsSize] = {'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'};
 
-constexpr char letters[lettersSize] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+constexpr char c_letters[c_lettersSize] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
 std::default_random_engine engine(time(nullptr));
 
 bool isConsonant(char c) {
-    for (char cons : consonants)
+    for (char cons : c_consonants)
         if (c == cons)
             return true;
     return false;
 }
 
 bool isVowel(char c) {
-    for (char vowel : vowels)
+    for (char vowel : c_vowels)
         if (c == vowel)
             return true;
     return false;
@@ -29,16 +29,16 @@ bool isVowel(char c) {
 
 char randomText::getSuccessor(char prevChar, bool start) {
     if (start) {
-        std::uniform_int_distribution<size_t> dist(0, lettersSize - 1);
-        return letters[dist(engine)];
+        std::uniform_int_distribution<size_t> dist(0, c_lettersSize - 1);
+        return c_letters[dist(engine)];
     } else if (isConsonant(prevChar)) {
-        std::uniform_int_distribution<size_t> dist(0, vowelsSize - 1);
-        return vowels[dist(engine)];
+        std::uniform_int_distribution<size_t> dist(0, c_vowelsSize - 1);
+        return c_vowels[dist(engine)];
     } else {
-        std::uniform_int_distribution<size_t> dist(0, lettersSize - 1);
+        std::uniform_int_distribution<size_t> dist(0, c_lettersSize - 1);
         char next = prevChar;
         while (next == prevChar)
-            next = letters[dist(engine)];
+            next = c_letters[dist(engine)];
 
         return next;
     }
