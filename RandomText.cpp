@@ -58,6 +58,7 @@ std::string randomText::generateWord(size_t length) {
     return result;
 }
 
+// Generates the sizes of the words for a sentence and computes the total size of the string to avoid multiple reallocations
 std::pair<std::vector<size_t>, size_t> generateWordSizes(size_t minWords, size_t maxWords) {
     std::uniform_int_distribution<size_t> numWordsDist(minWords, maxWords);
     std::uniform_int_distribution<size_t> sizeDist(3, 10);
@@ -74,42 +75,58 @@ std::pair<std::vector<size_t>, size_t> generateWordSizes(size_t minWords, size_t
     return std::make_pair(std::move(wordSizes), stringSize);
 }
 
-std::string randomText::generateSentence(size_t minWords, size_t maxWords) {
+void generateSentenceToString(std::string& string, size_t start, const std::vector<size_t>& wordSizes, size_t resultSize) {
     std::uniform_int_distribution<int> percentDist(1, 100);
 
-    auto [wordSizes, stringSize] = generateWordSizes(minWords, maxWords);
-    size_t numWords = wordSizes.size();
-
-    std::string result(stringSize, ' ');
-    size_t index = 0;
-    for (int i = 0; i < numWords; ++i) {
-        generateWordToString(result, index, wordSizes[i]);
+    size_t index = start;
+    for (size_t i = 0; i < wordSizes.size(); ++i) {
+        generateWordToString(string, index, wordSizes[i]);
         index += wordSizes[i] + 1;
     }
 
-    result[0] = toupper(result[0]);
+    string[start] = toupper(string[start]);
 
     if (percentDist(engine) > 20)
-        result[stringSize - 1] = '.';
+        string[start + resultSize - 1] = '.';
     else
-        result[stringSize - 1] = '!';
+        string[start + resultSize - 1] = '!';
+}
+
+std::string randomText::generateSentence(size_t minWords, size_t maxWords) {
+    std::uniform_int_distribution<int> percentDist(1, 100);
+
+    auto [wordSizes, resultSize] = generateWordSizes(minWords, maxWords);
+    size_t numWords = wordSizes.size();
+
+    std::string result(resultSize, ' ');
+    generateSentenceToString(result, 0, wordSizes, resultSize);
 
     return result;
 }
 
 std::string randomText::generateText(size_t numSentences, size_t minWordsPerSentence, size_t maxWordsPerSentence) {
-    std::uniform_int_distribution<int> percentDist(1, 100);
+    // Generate all the sizes before allocating the string
+    std::vector<std::pair<std::vector<size_t>, size_t>> sentenceSizes(numSentences);
 
-    std::string text("");
-
+    size_t resultLength = 0;
     for (size_t i = 0; i < numSentences; ++i) {
-        text += generateSentence(minWordsPerSentence, maxWordsPerSentence);
-
-        if (percentDist(engine) > 30)
-            text += " ";
-        else
-            text += "\n";
+        sentenceSizes[i] = generateWordSizes(minWordsPerSentence, maxWordsPerSentence);
+        resultLength += sentenceSizes[i].second + 1;
     }
 
-    return text;
+    std::uniform_int_distribution<int> percentDist(1, 100);
+    std::string result(resultLength, ' ');
+
+    size_t index = 0;
+    for (size_t i = 0; i < numSentences; ++i) {
+        generateSentenceToString(result, index, sentenceSizes[i].first, sentenceSizes[i].second);
+        index += sentenceSizes[i].second + 1;
+
+        if (percentDist(engine) > 30)
+            result[index - 1] = ' ';
+        else
+            result[index - 1] = '\n';
+    }
+
+    return result;
 }
