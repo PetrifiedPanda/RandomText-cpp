@@ -1,9 +1,7 @@
 #include <string>
 
 namespace randomText {
-    char getSuccessor(char prevChar, bool start = false);
-
-    std::string getRandomWord(size_t length);
+    std::string generateWord(size_t length);
 
     std::string generateSentence(size_t minWords, size_t maxWords);
 
