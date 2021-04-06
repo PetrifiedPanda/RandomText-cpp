@@ -63,7 +63,7 @@ std::pair<std::vector<size_t>, size_t> generateWordSizes(size_t minWords, size_t
     std::uniform_int_distribution<size_t> sizeDist(3, 10);
 
     size_t numWords = numWordsDist(engine);
-    std::vector<size_t> wordSizes = std::vector<size_t>(numWords, 0);
+    std::vector<size_t> wordSizes(numWords);
     size_t stringSize = 0;
     for (size_t i = 0; i < numWords; ++i) {
         size_t wordSize = sizeDist(engine);
@@ -80,7 +80,7 @@ std::string randomText::generateSentence(size_t minWords, size_t maxWords) {
     auto [wordSizes, stringSize] = generateWordSizes(minWords, maxWords);
     size_t numWords = wordSizes.size();
 
-    std::string result = std::string(stringSize, ' ');
+    std::string result(stringSize, ' ');
     size_t index = 0;
     for (int i = 0; i < numWords; ++i) {
         generateWordToString(result, index, wordSizes[i]);
