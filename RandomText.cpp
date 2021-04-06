@@ -27,7 +27,7 @@ bool isVowel(char c) {
     return false;
 }
 
-char randomText::getSuccessor(char prevChar, bool start) {
+char getSuccessor(char prevChar, bool start = false) {
     if (start) {
         std::uniform_int_distribution<size_t> dist(0, c_lettersSize - 1);
         return c_letters[dist(engine)];
@@ -44,13 +44,17 @@ char randomText::getSuccessor(char prevChar, bool start) {
     }
 }
 
-std::string randomText::getRandomWord(size_t length) {
+void generateWordToString(std::string& str, size_t start, size_t length) {
+    str[start] = getSuccessor('0', true);
+
+    size_t end = start + length;
+    for (size_t i = start + 1; i < end; ++i)
+        str[i] = getSuccessor(str[i - 1]);
+}
+
+std::string randomText::generateWord(size_t length) {
     std::string result(length, '0');
-    result[0] = getSuccessor('0', true);
-
-    for (size_t i = 1; i < length; ++i)
-        result[i] = getSuccessor(result[i - 1]);
-
+    generateWordToString(result, 0, length);
     return result;
 }
 
@@ -58,20 +62,27 @@ std::string randomText::generateSentence(size_t minWords, size_t maxWords) {
     std::uniform_int_distribution<size_t> numWordsDist(minWords, maxWords);
     std::uniform_int_distribution<size_t> sizeDist(3, 10);
     std::uniform_int_distribution<int> percentDist(1, 100);
+
     size_t numWords = numWordsDist(engine);
-
-    std::string result("");
+    std::vector<size_t> wordSizes = std::vector<size_t>(numWords, 0);
+    size_t stringSize = 0;
     for (size_t i = 0; i < numWords; ++i) {
-        result += getRandomWord(sizeDist(engine));
+        size_t wordSize = sizeDist(engine);
+        stringSize += wordSize + 1;
+        wordSizes[i] = wordSize;
+    }
 
-        if (i != numWords - 1)
-            result += " ";
+    std::string result = std::string(stringSize, ' ');
+    size_t index = 0;
+    for (int i = 0; i < numWords; ++i) {
+        generateWordToString(result, index, wordSizes[i]);
+        index += wordSizes[i] + 1;
     }
 
     if (percentDist(engine) > 20)
-        result += "!";
+        result[stringSize - 1] = '!';
     else
-        result += ".";
+        result[stringSize - 1] = '.';
 
     return result;
 }
