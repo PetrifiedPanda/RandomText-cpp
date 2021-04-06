@@ -87,6 +87,8 @@ std::string randomText::generateSentence(size_t minWords, size_t maxWords) {
         index += wordSizes[i] + 1;
     }
 
+    result[0] = toupper(result[0]);
+
     if (percentDist(engine) > 20)
         result[stringSize - 1] = '.';
     else
