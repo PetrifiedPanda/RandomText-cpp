@@ -1,6 +1,7 @@
 #include "RandomText.h"
 
 #include <random>
+#include <ctime>
 
 constexpr size_t c_vowelsSize = 5;
 constexpr size_t c_consonantsSize = 21;
