@@ -3,6 +3,9 @@
 #include <random>
 #include <ctime>
 
+
+namespace random_text {
+
 constexpr size_t VOWELS_SIZE = 5;
 constexpr size_t CONSONANTS_SIZE = 21;
 constexpr size_t LETTERS_SIZE = 26;
@@ -53,7 +56,7 @@ void generate_word_to_string(std::string& str, size_t start, size_t length) {
         str[i] = get_successor(str[i - 1]);
 }
 
-std::string random_text::generate_word(size_t length) {
+std::string generate_word(size_t length) {
     std::string result(length, '0');
     generate_word_to_string(result, 0, length);
     return result;
@@ -93,7 +96,7 @@ void generate_sentence_to_string(std::string& string, size_t start, const std::v
         string[start + result_size - 1] = '!';
 }
 
-std::string random_text::generate_sentence(size_t min_words, size_t max_words) {
+std::string generate_sentence(size_t min_words, size_t max_words) {
     std::uniform_int_distribution<int> percent_dist(1, 100);
 
     auto [word_sizes, result_size] = generate_word_sizes(min_words, max_words);
@@ -105,7 +108,7 @@ std::string random_text::generate_sentence(size_t min_words, size_t max_words) {
     return result;
 }
 
-std::string random_text::generate_text(size_t num_sentences, size_t min_words_in_sentence, size_t max_words_in_sentence) {
+std::string generate_text(size_t num_sentences, size_t min_words_in_sentence, size_t max_words_in_sentence) {
     // Generate all the sizes before allocating the string
     std::vector<std::pair<std::vector<size_t>, size_t>> sentence_sizes(num_sentences);
 
@@ -131,3 +134,5 @@ std::string random_text::generate_text(size_t num_sentences, size_t min_words_in
 
     return result;
 }
+
+}; // namespace random_text
