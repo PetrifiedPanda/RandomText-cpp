@@ -1,9 +1,9 @@
 #include <string>
 
-namespace randomText {
-    std::string generateWord(size_t length);
+namespace random_text {
+    std::string generate_word(size_t length);
 
-    std::string generateSentence(size_t minWords, size_t maxWords);
+    std::string generate_sentence(size_t min_words, size_t max_words);
 
-    std::string generateText(size_t numSentences, size_t minWordsPerSentence = 3, size_t maxWordsPerSentence = 10);
+    std::string generate_text(size_t num_sentences, size_t min_words_in_sentence = 3, size_t max_words_in_sentence = 10);
 };

@@ -3,127 +3,127 @@
 #include <random>
 #include <ctime>
 
-constexpr size_t c_vowelsSize = 5;
-constexpr size_t c_consonantsSize = 21;
-constexpr size_t c_lettersSize = 26;
+constexpr size_t VOWELS_SIZE = 5;
+constexpr size_t CONSONANTS_SIZE = 21;
+constexpr size_t LETTERS_SIZE = 26;
 
-constexpr char c_vowels[c_vowelsSize] = {'a', 'e', 'i', 'o', 'u'};
-constexpr char c_consonants[c_consonantsSize] = {'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'};
+constexpr char VOWELS[VOWELS_SIZE] = {'a', 'e', 'i', 'o', 'u'};
+constexpr char CONSONANTS[CONSONANTS_SIZE] = {'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'};
 
-constexpr char c_letters[c_lettersSize] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+constexpr char LETTERS[LETTERS_SIZE] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
 std::default_random_engine engine(time(nullptr));
 
-bool isConsonant(char c) {
-    for (char cons : c_consonants)
+bool is_consonant(char c) {
+    for (char cons : CONSONANTS)
         if (c == cons)
             return true;
     return false;
 }
 
-bool isVowel(char c) {
-    for (char vowel : c_vowels)
+bool is_vowel(char c) {
+    for (char vowel : VOWELS)
         if (c == vowel)
             return true;
     return false;
 }
 
-char getSuccessor(char prevChar, bool start = false) {
+char get_successor(char prev_char, bool start = false) {
     if (start) {
-        std::uniform_int_distribution<size_t> dist(0, c_lettersSize - 1);
-        return c_letters[dist(engine)];
-    } else if (isConsonant(prevChar)) {
-        std::uniform_int_distribution<size_t> dist(0, c_vowelsSize - 1);
-        return c_vowels[dist(engine)];
+        std::uniform_int_distribution<size_t> dist(0, LETTERS_SIZE - 1);
+        return LETTERS[dist(engine)];
+    } else if (is_consonant(prev_char)) {
+        std::uniform_int_distribution<size_t> dist(0, VOWELS_SIZE - 1);
+        return VOWELS[dist(engine)];
     } else {
-        std::uniform_int_distribution<size_t> dist(0, c_lettersSize - 1);
-        char next = prevChar;
-        while (next == prevChar)
-            next = c_letters[dist(engine)];
+        std::uniform_int_distribution<size_t> dist(0, LETTERS_SIZE - 1);
+        char next = prev_char;
+        while (next == prev_char)
+            next = LETTERS[dist(engine)];
 
         return next;
     }
 }
 
-void generateWordToString(std::string& str, size_t start, size_t length) {
-    str[start] = getSuccessor('0', true);
+void generate_word_to_string(std::string& str, size_t start, size_t length) {
+    str[start] = get_successor('0', true);
 
     size_t end = start + length;
     for (size_t i = start + 1; i < end; ++i)
-        str[i] = getSuccessor(str[i - 1]);
+        str[i] = get_successor(str[i - 1]);
 }
 
-std::string randomText::generateWord(size_t length) {
+std::string random_text::generate_word(size_t length) {
     std::string result(length, '0');
-    generateWordToString(result, 0, length);
+    generate_word_to_string(result, 0, length);
     return result;
 }
 
 // Generates the sizes of the words for a sentence and computes the total size of the string to avoid multiple reallocations
-std::pair<std::vector<size_t>, size_t> generateWordSizes(size_t minWords, size_t maxWords) {
-    std::uniform_int_distribution<size_t> numWordsDist(minWords, maxWords);
-    std::uniform_int_distribution<size_t> sizeDist(3, 10);
+std::pair<std::vector<size_t>, size_t> generate_word_sizes(size_t min_words, size_t max_words) {
+    std::uniform_int_distribution<size_t> num_words_dist(min_words, max_words);
+    std::uniform_int_distribution<size_t> size_dist(3, 10);
 
-    size_t numWords = numWordsDist(engine);
-    std::vector<size_t> wordSizes(numWords);
-    size_t stringSize = 0;
-    for (size_t i = 0; i < numWords; ++i) {
-        size_t wordSize = sizeDist(engine);
-        stringSize += wordSize + 1;
-        wordSizes[i] = wordSize;
+    size_t num_words = num_words_dist(engine);
+    std::vector<size_t> word_sizes(num_words);
+    size_t string_size = 0;
+    for (size_t i = 0; i < num_words; ++i) {
+        size_t word_size = size_dist(engine);
+        string_size += word_size + 1;
+        word_sizes[i] = word_size;
     }
 
-    return std::make_pair(std::move(wordSizes), stringSize);
+    return std::make_pair(std::move(word_sizes), string_size);
 }
 
-void generateSentenceToString(std::string& string, size_t start, const std::vector<size_t>& wordSizes, size_t resultSize) {
-    std::uniform_int_distribution<int> percentDist(1, 100);
+void generate_sentence_to_string(std::string& string, size_t start, const std::vector<size_t>& word_sizes, size_t result_size) {
+    std::uniform_int_distribution<int> percent_dist(1, 100);
 
     size_t index = start;
-    for (size_t i = 0; i < wordSizes.size(); ++i) {
-        generateWordToString(string, index, wordSizes[i]);
-        index += wordSizes[i] + 1;
+    for (size_t i = 0; i < word_sizes.size(); ++i) {
+        generate_word_to_string(string, index, word_sizes[i]);
+        index += word_sizes[i] + 1;
     }
 
     string[start] = toupper(string[start]);
 
-    if (percentDist(engine) > 20)
-        string[start + resultSize - 1] = '.';
+    if (percent_dist(engine) > 20)
+        string[start + result_size - 1] = '.';
     else
-        string[start + resultSize - 1] = '!';
+        string[start + result_size - 1] = '!';
 }
 
-std::string randomText::generateSentence(size_t minWords, size_t maxWords) {
-    std::uniform_int_distribution<int> percentDist(1, 100);
+std::string random_text::generate_sentence(size_t min_words, size_t max_words) {
+    std::uniform_int_distribution<int> percent_dist(1, 100);
 
-    auto [wordSizes, resultSize] = generateWordSizes(minWords, maxWords);
-    size_t numWords = wordSizes.size();
+    auto [word_sizes, result_size] = generate_word_sizes(min_words, max_words);
+    size_t num_words = word_sizes.size();
 
-    std::string result(resultSize, ' ');
-    generateSentenceToString(result, 0, wordSizes, resultSize);
+    std::string result(result_size, ' ');
+    generate_sentence_to_string(result, 0, word_sizes, result_size);
 
     return result;
 }
 
-std::string randomText::generateText(size_t numSentences, size_t minWordsPerSentence, size_t maxWordsPerSentence) {
+std::string random_text::generate_text(size_t num_sentences, size_t min_words_in_sentence, size_t max_words_in_sentence) {
     // Generate all the sizes before allocating the string
-    std::vector<std::pair<std::vector<size_t>, size_t>> sentenceSizes(numSentences);
+    std::vector<std::pair<std::vector<size_t>, size_t>> sentence_sizes(num_sentences);
 
-    size_t resultLength = 0;
-    for (size_t i = 0; i < numSentences; ++i) {
-        sentenceSizes[i] = generateWordSizes(minWordsPerSentence, maxWordsPerSentence);
-        resultLength += sentenceSizes[i].second + 1;
+    size_t result_length = 0;
+    for (size_t i = 0; i < num_sentences; ++i) {
+        sentence_sizes[i] = generate_word_sizes(min_words_in_sentence, max_words_in_sentence);
+        result_length += sentence_sizes[i].second + 1;
     }
 
-    std::uniform_int_distribution<int> percentDist(1, 100);
-    std::string result(resultLength, ' ');
+    std::uniform_int_distribution<int> percent_dist(1, 100);
+    std::string result(result_length, ' ');
 
     size_t index = 0;
-    for (size_t i = 0; i < numSentences; ++i) {
-        generateSentenceToString(result, index, sentenceSizes[i].first, sentenceSizes[i].second);
-        index += sentenceSizes[i].second + 1;
+    for (size_t i = 0; i < num_sentences; ++i) {
+        generate_sentence_to_string(result, index, sentence_sizes[i].first, sentence_sizes[i].second);
+        index += sentence_sizes[i].second + 1;
 
-        if (percentDist(engine) > 30)
+        if (percent_dist(engine) > 30)
             result[index - 1] = ' ';
         else
             result[index - 1] = '\n';
